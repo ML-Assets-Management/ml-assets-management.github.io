@@ -2,12 +2,16 @@
 layout: default
 ---
 
+[//]: # (# ML Assets Management)
+
 ## Abstract
 Put abstract here
 
-## Materials
+---
 
-[Slides]() | [Demo]() | [Proposal]()
+## Speakers
+
+---
 
 ## Schedule
 
@@ -36,6 +40,12 @@ Put abstract here
 - **Storage and Scalability**.
 - **Versioning and Lineage**.
 - **Indexing and Querying**.
+
+---
+
+## Demonstrations
+
+---
 
 ## Reading List
 
