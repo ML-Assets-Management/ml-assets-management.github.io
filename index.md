@@ -37,13 +37,13 @@ based systems....
 - **Data-driven Model Selection**.
 - **Model-driven Data Discovery**.
 
-### Part 4: ML Assets Utilization. (00:50 - 01:10)
+### Part 4: ML Assets Utilization. (00:50 - 01:15)
 
 - **Collaboration**: Workflow Aggregation and Automation.
 - **Reproducibility**: Benchmarking and Model Provenance
 - **Responsibility**: Licensing and Ethical Asset Governance
 
-### Part 5: System Challenges in ML Assets Management (00:10 - 01:30)
+### Part 5: System Challenges in ML Assets Management (01:15 - 01:30)
 
 - **Storage and Scalability**.
 - **Versioning and Lineage**.
