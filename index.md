@@ -4,12 +4,20 @@ layout: default
 
 [//]: # (# ML Assets Management)
 
-## Abstract
-Put abstract here
+## About the Tutorial
+
+Machine Learning (ML) assets, such as models and datasets, are critical components in the development and deployment of ML-
+based systems....
+
+(Put Abstraact Here)
+
+### Resources: [Reading List](pages/references), [Demonstrations](pages/demo)
 
 ---
 
 ## Speakers
+
+<br><br><br><br>
 
 ---
 
@@ -17,7 +25,7 @@ Put abstract here
 
 ### Part 1: Motivation and Background (00:00 - 00:10)
 
-### Part 2: ML Assets Curation (00:10 - 00:25) 
+### Part 2: ML Assets Curation (00:10 - 00:25)
 
 - **Metadata and Schema**: Support Structured Understanding.
 - **Repositories and Infrastructure**: Backbone of Discovery.
@@ -40,21 +48,3 @@ Put abstract here
 - **Storage and Scalability**.
 - **Versioning and Lineage**.
 - **Indexing and Querying**.
-
----
-
-## Demonstrations
-
----
-
-## Reading List
-
-**Bold papers** are discussed in detail during our tutorial.
-
-### ML Assets Curation
-
-### ML Assets Search and Discovery
-
-### ML Assets Utilization
-
-### System Challenges in ML Assets Management
