@@ -9,7 +9,7 @@ layout: default
 Machine Learning (ML) assets, such as models and datasets, are critical components in the development and deployment of ML-
 based systems....
 
-(Put Abstraact Here)
+(Put Abstract Here)
 
 ### Resources: [Reading List](pages/references), [Demonstrations](pages/demo)
 
