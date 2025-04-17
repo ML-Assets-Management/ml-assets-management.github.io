@@ -6,6 +6,8 @@ layout: default
 
 ## Reading List
 
+Updating Soon!
+
 **Bold papers** are discussed in detail during our tutorial.
 
 ### ML Assets Curation
