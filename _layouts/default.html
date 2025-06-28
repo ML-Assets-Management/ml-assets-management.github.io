@@ -18,9 +18,13 @@
     <header class="page-header" role="banner">
       <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
       <h2 class="project-tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
-      <a href="https://wangmengying.me/pending.html" class="btn"> Proposal </a>
-      <a href="https://wangmengying.me/pending.html" class="btn"> Slides </a>
-      <a href="https://wangmengying.me/pending.html" class="btn"> Video </a>
+      {% if site.vldb_logo %}
+        <img src="{{ site.vldb_logo | relative_url }}" alt="VLDB Logo" class="vldb-logo">
+        <br>
+      {% endif %}
+      <a href="https://wangmengying.me/pending.html" class="btn"> <b>Proposal</b> </a>
+      <a href="https://wangmengying.me/pending.html" class="btn"> <b>Slides</b> </a>
+      <a href="https://wangmengying.me/pending.html" class="btn"> <b>Video</b> </a>
 <!--      {% if site.github.is_project_page %}-->
 <!--        <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>-->
 <!--      {% else %}-->

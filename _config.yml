@@ -1,5 +1,6 @@
-title: "ML Assets Management"
-description: "Curation, Discovery, and Utilization"
+title: "ML-Asset Management: Curation, Discovery, and Utilization"
+description: "VLDB 2025 Tutorial"
+vldb_logo: /assets/logos/vldb.png
 theme: jekyll-theme-cayman
 logo: /assets/logo.png
 show_downloads: false

@@ -3,12 +3,117 @@
 @import "{{ site.theme }}";
 
 
-//.btn {
-//  width: 150px;
-//}
+.btn {
+  width: 150px;
+  margin: 0.5rem 0.5rem;
+}
+
+@media screen and (max-width: 42em) {
+  .page-header {
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-block;
+    width: 80%; /* Make buttons wider on mobile */
+    margin: 0.3rem auto; /* Vertical spacing between buttons */
+  }
+}
+
+@media screen and (max-width: 30em) {
+  .btn {
+    width: 90%; /* Make buttons even wider */
+  }
+}
 
 h2 {
   text-align: center;
+}
+
+.project-name {
+  white-space: pre-wrap;
+  line-height: 1.3;
+  word-wrap: break-word;
+  hyphens: auto;
+  font-size: 2.25rem;
+}
+
+@media screen and (max-width: 42em) {
+  .project-name {
+    font-size: 1.75rem;
+  }
+}
+
+@media screen and (max-width: 30em) {
+  .project-name {
+    font-size: 1.5rem;
+  }
+}
+
+.page-header {
+  position: relative;
+  padding: 4rem 5rem; /* Reduced padding values */
+}
+
+.vldb-logo {
+  margin-top: 10px;
+  max-width: 320px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgba(255, 255, 255, 0.3); /* More transparent background */
+  padding: 10px;
+  border-radius: 5px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Soft glow instead of defined shadow */
+  border: 0px solid rgba(255, 255, 255, 0.1); /* Very subtle, almost invisible border */
+}
+
+@media screen and (max-width: 42em) {
+  .vldb-logo {
+    max-width: 250px;
+  }
+}
+
+.speakers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .speakers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .speakers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.speaker {
+  text-align: center;
+}
+
+.speaker-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.speaker h3 {
+  margin: 10px 0 5px;
+}
+
+.speaker p {
+  margin: 0;
+  color: #666;
 }
 
 
