@@ -26,6 +26,12 @@ Updating Soon!
 
 ### ML Assets Utilization
 
+- Wang, Zuozhi; Huang, Yicong; Ni, Shengquan; Kumar, Avinash; Alsudais, Sadeem; Liu, Xiaozhen; Lin, Xinyuan; Ding, Yunyan; Li, Chen. ["Texera: A System for Collaborative and Interactive Data Analytics Using Workflows."](https://doi.org/10.14778/3681954.3682022)
+
+- Huang, Yicong; Wang, Zuozhi; Li, Chen. ["Udon: Efficient Debugging of User-Defined Functions in Big Data Systems with Line-by-Line Control."](https://doi.org/10.1145/3626712)
+
+- Ni, Shengquan; Huang, Yicong; Wang, Zuozhi; Li, Chen. ["IcedTea: Efficient and Responsive Time-Travel Debugging in Dataflow Systems."](https://dx.doi.org/10.14778/3712221.3712251)
+
 - Duan, Moming, Qinbin Li, and Bingsheng He. "ModelGo: A practical tool for machine learning license analysis." Proceedings of the ACM Web Conference 2024.
 
 - Duan, Moming, et al. "" They've Stolen My GPL-Licensed Model!": Toward Standardized and Transparent Model Licensing." arXiv preprint arXiv:2412.11483 (2024).
