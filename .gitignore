@@ -8,3 +8,10 @@ vendor/
 
 .idea/
 .DS_Store
+node_modules/
+.vscode/
+*.log
+npm-debug.log*
+.env
+.env.*
+*.pptx

@@ -50,9 +50,6 @@ We provide a categorization of ML assets, and major management issues, survey st
 We further highlight system-level challenges related to scalability, lineage, and unified indexing. 
 Through live demonstrations of systems, this tutorial equips both researchers and practitioners with actionable insights and practical tools for advancing ML-asset management in real-world and domain-specific settings.
 
-
-### Resources: [Reading List](pages/references), [Demonstrations](pages/demo)
-
 ---
 
 ## Schedule

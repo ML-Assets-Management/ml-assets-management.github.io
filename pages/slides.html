@@ -1,0 +1,524 @@
+---
+layout: default
+title: "ML-Asset Management: Curation, Discovery, and Utilization"
+description: "VLDB 2025 Tutorial"
+---
+
+<style>
+  /* Website-like scroll layout */
+  body { background: #fff; }
+
+  /* Accent variables aligned with site theme-color */
+  :root { --accent: #157878; --accent-ink: #0f4e4e; }
+
+  /* Toolbar */
+  .slides-toolbar {
+    position: sticky; top: 0; z-index: 40;
+    margin: 0 0 14px;
+    padding: 10px;
+    background: rgba(248, 250, 252, 0.75);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    backdrop-filter: saturate(180%) blur(8px);
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  }
+  .slides-toolbar .toolbar-left { justify-self: start; display:flex; align-items:center; min-width: 0; }
+  .slides-toolbar .toolbar-right { justify-self: end; display:flex; align-items:center; gap: 10px; flex-wrap: nowrap; white-space: nowrap; }
+  .slides-toolbar .toolbar-right > * { flex: 0 0 auto; }
+  @media (max-width: 640px) {
+    .current-part { max-width: 42vw; font-size: 14px; }
+    .slides-toolbar .tool-btn { padding: 6px 9px; font-size: 13px; }
+    .slides-toolbar { gap: 8px; }
+    .slides-toolbar .tool-input { width: 100px; max-width: 28vw; }
+    #topSlideInput { width: 90px; max-width: 26vw; }
+  }
+  /* Tighten further on very narrow screens to keep one line */
+  @media (max-width: 480px) {
+    .current-part { max-width: 38vw; font-size: 13px; }
+    .slides-toolbar .tool-btn { padding: 5px 8px; font-size: 12.5px; }
+    .slides-toolbar { gap: 6px; }
+    .slides-toolbar .tool-input { width: 90px; max-width: 30vw; font-size: 12.5px; padding: 5px 8px; }
+    #topSlideInput { width: 80px; max-width: 26vw; }
+  }
+  @media (max-width: 360px) {
+    .current-part { max-width: 34vw; font-size: 12.5px; }
+    .slides-toolbar .tool-btn { padding: 4px 7px; font-size: 12px; }
+    .slides-toolbar { gap: 4px; }
+    .slides-toolbar .tool-input { width: 80px; max-width: 28vw; font-size: 12px; padding: 4px 7px; }
+    #topSlideInput { width: 70px; }
+  }
+  .slides-toolbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -12px; height: 12px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0));
+    pointer-events: none;
+  }
+  .slides-toolbar .tool-btn {
+    display: inline-block;
+    padding: 7px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #111;
+    text-decoration: none;
+  }
+  .slides-toolbar .tool-btn:hover { background: #f3f4f6; }
+  .slides-toolbar .tool-btn.primary { border-color: var(--accent); color: var(--accent-ink); background: #eaf6f4; }
+  .slides-toolbar .toolbar-group { position: relative; display: flex; gap: 8px; align-items: center; }
+  .slides-toolbar .tool-input { padding: 7px 10px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; font-size: 14px; width: 120px; max-width: 30vw; }
+  #topSlideInput { width: 110px; max-width: 26vw; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .tool-btn:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .current-part {
+    margin-left: 6px; font-size: 16px; color: #159957; font-weight: 700; white-space: nowrap;
+    display: inline-block; max-width: 50vw; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* On medium+ screens, show full title without truncation */
+  @media (min-width: 768px) {
+    .current-part { max-width: none; overflow: visible; text-overflow: initial; }
+  }
+
+  /* Small dropdown panel for roadmap */
+  .dropdown-panel {
+    position: absolute; top: 110%; left: 0; z-index: 10;
+    display: none; min-width: 280px;
+    padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px;
+    background: #fff; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .dropdown-panel.open { display: block; }
+  .dropdown-panel .menu { display: grid; gap: 6px; }
+  .dropdown-panel .menu-item {
+    display: block; width: 100%; text-align: left;
+    padding: 7px 10px; border-radius: 8px; border: 1px solid #e5e7eb;
+    background: #f9fafb; color: #111; text-decoration: none; font-size: 14px; white-space: nowrap;
+    cursor: pointer;
+  }
+  .dropdown-panel .menu-item:hover { background: #eef2ff; border-color: #c7d2fe; }
+  /* Dropdowns shrink to longest option, clamped to viewport */
+  #roadmapPanel, #downloadPanel { width: max-content; max-width: calc(100vw - 32px); overflow-x: auto; }
+
+  /* Make this page full-bleed and remove default header on this page */
+  .page-header { display: none !important; }
+  .main-content { max-width: none; padding: 0; }
+  .slides-container { width: 100%; max-width: none; margin: 0; }
+  .slide-card {
+    background: #fff; border: 0; border-radius: 0;
+    box-shadow: none;
+    margin: 0; padding: 0;
+    scroll-margin-top: 90px;
+    position: relative;
+  }
+  .slide-canvas-wrap { position: relative; display: block; width: 100%; }
+  .slide-separator { border-top: 2px dashed #94a3b8; margin: 12px 0 18px; }
+  .slide-card:last-child .slide-separator { display: none; }
+  .slide-share {
+    position: absolute; right: 10px; top: 10px; z-index: 2;
+    padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(17,24,39,0.7); /* slate-900 @ 70% */
+    color: #fff; font-size: 12.5px; line-height: 1; cursor: pointer;
+    -webkit-backdrop-filter: saturate(160%) blur(4px);
+    backdrop-filter: saturate(160%) blur(4px);
+  }
+  .slide-share:hover { background: rgba(17,24,39,0.82); }
+  .slide-share:focus { outline: 2px solid #93c5fd; outline-offset: 1px; }
+  .slide-share.copied { background: rgba(16,185,129,0.8); border-color: rgba(16,185,129,0.6); }
+  
+  .slide-canvas { width: 100%; height: auto; display: block; background: #fff; border-radius: 6px; }
+  .slide-videos { margin-top: 10px; }
+  .slide-videos details { border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; background:#fff; }
+  .slide-videos summary {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    background: #eaf6f4; border: 1px solid #c7e8dc; border-radius: 6px; padding: 6px 10px;
+  }
+  .slide-videos summary svg { width: 18px; height: 18px; color: #159957; }
+  .slide-videos video { width: 100%; border-radius: 6px; background: #000; }
+  .loading { color:#6b7280; font-size: 13px; }
+  .error { color:#b91c1c; font-size: 13px; }
+</style>
+
+<div class="slides-container">
+  <div class="slides-toolbar" role="navigation" aria-label="Slides toolbar">
+    <div class="toolbar-left">
+      <span id="currentPart" class="current-part" aria-live="polite">[Slides - VLDB'25 Tutorial] ML-Asset Management: Curation, Discovery, and Utilization</span>
+    </div>
+    <div class="toolbar-right">
+      <div class="toolbar-group" id="roadmapGroup">
+        <button id="roadmapBtn" class="tool-btn primary" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="roadmapPanel">Roadmap</button>
+        <div id="roadmapPanel" class="dropdown-panel" role="dialog" aria-modal="true" aria-label="Select part">
+          <div class="menu" id="roadmapMenu">
+            <button class="menu-item" data-slide="2">Part 1: Motivation and Background</button>
+            <button class="menu-item" data-slide="6">Part 2: ML-Asset Curation (Demo: ModelGO)</button>
+            <button class="menu-item" data-slide="25">Part 3: ML-Asset Curation (Demo: CRUX)</button>
+            <button class="menu-item" data-slide="38">Part 4: ML-Asset Utilization (Demo: Texera)</button>
+            <button class="menu-item" data-slide="52">Part 5: System Challenges and Opportunities</button>
+          </div>
+        </div>
+      </div>
+      <div class="toolbar-group" id="downloadGroup">
+        <button id="downloadBtn" class="tool-btn primary" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="downloadPanel">Download</button>
+        <div id="downloadPanel" class="dropdown-panel" role="dialog" aria-modal="true" aria-label="Select format">
+          <div class="menu">
+            <a class="menu-item" href="{{ '/assets/docs/tutorial_vldb25.pdf' | relative_url }}" download>PDF (~16M)</a>
+            <a class="menu-item" href="https://docs.google.com/presentation/d/15FPTPocDQ2PRh1Z9iSE14QqZAy16kV3B/edit?usp=sharing&ouid=116844131324758766823&rtpof=true&sd=true" target="_blank" rel="noopener">PPTX (~325M)</a>
+          </div>
+        </div>
+      </div>
+      <a class="tool-btn primary" href="{{ '/' | relative_url }}">Back to Home</a>
+      <div class="toolbar-group" id="slideGoGroup">
+        <input id="topSlideInput" class="tool-input" type="number" min="1" placeholder="Slide #" aria-label="Jump to slide number in this deck" />
+        <button id="topSlideGo" class="tool-btn" type="button">Go</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slidesRoot" aria-live="polite"></div>
+  <div id="slidesStatus" class="loading">Loading slides…</div>
+</div>
+
+<script type="module">
+  const pdfUrl = '{{ '/assets/docs/tutorial_vldb25.pdf' | relative_url }}';
+  const videoBase = '{{ '/assets/videos/' | relative_url }}';
+
+  // Videos mapped by slide number
+  const videoMap = {
+    24: [{ file: 'media1.mp4', type: 'video/mp4' }],
+    43: [{ file: 'media2.mp4', type: 'video/mp4' }],
+    44: [{ file: 'media3.mp4', type: 'video/mp4' }],
+    50: [{ file: 'media4.mp4', type: 'video/mp4' }]
+  };
+
+  const root = document.getElementById('slidesRoot');
+  const statusEl = document.getElementById('slidesStatus');
+  const roadmapBtn = document.getElementById('roadmapBtn');
+  const roadmapPanel = document.getElementById('roadmapPanel');
+  const roadmapMenu = document.getElementById('roadmapMenu');
+  const currentPartEl = document.getElementById('currentPart');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const downloadPanel = document.getElementById('downloadPanel');
+  const topSlideInput = document.getElementById('topSlideInput');
+  const topSlideGo = document.getElementById('topSlideGo');
+
+  function makeId(n) { return `slide-${n}`; }
+  function makeAnchor(n) { return `#${makeId(n)}`; }
+
+  function pixelRatio() { return Math.min(window.devicePixelRatio || 1, 2); }
+  function jumpToSlide(n) {
+    const target = document.getElementById(makeId(n));
+    if (target) {
+      history.pushState(null, '', makeAnchor(n));
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      location.hash = makeAnchor(n);
+    }
+  }
+
+  const partLabels = {
+    1: "[Slides - VLDB'25 Tutorial] ML-Asset Management: Curation, Discovery, and Utilization",
+    2: 'Part 1: Motivation and Background',
+    6: 'Part 2: ML-Asset Curation (Demo: ModelGO)',
+    25: 'Part 3: ML-Asset Curation (Demo: CRUX)',
+    38: 'Part 4: ML-Asset Utilization (Demo: Texera)',
+    52: 'Part 5: System Challenges and Opportunities'
+  };
+  function setCurrentPart(n) {
+    if (!currentPartEl) return;
+    const full = partLabels[n];
+    if (!full) return;
+    let label = full;
+    if (n === 1) {
+      const isSmall = window.matchMedia('(max-width: 640px)').matches;
+      label = isSmall ? "VLDB'25 Tutorial" : full;
+    }
+    currentPartEl.textContent = label;
+    currentPartEl.title = full; // Always keep full text in tooltip
+  }
+
+  function buildSlideShell(n) {
+    const card = document.createElement('section');
+    card.className = 'slide-card'; card.id = makeId(n);
+
+    const wrap = document.createElement('div'); wrap.className = 'slide-canvas-wrap';
+    const canvas = document.createElement('canvas'); canvas.className = 'slide-canvas'; canvas.dataset.page = String(n);
+    canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', `Slide ${n}`);
+    wrap.appendChild(canvas);
+
+    const share = document.createElement('button');
+    share.className = 'slide-share';
+    share.type = 'button';
+    share.dataset.page = String(n);
+    share.textContent = 'Share this slide';
+    share.setAttribute('aria-label', `Copy link to slide ${n}`);
+    wrap.appendChild(share);
+
+    card.appendChild(wrap);
+
+    if (Array.isArray(videoMap[n]) && videoMap[n].length) {
+      const vidsWrap = document.createElement('div'); vidsWrap.className = 'slide-videos';
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" style="flex:0 0 auto; color:#159957;">
+          <path d="M17 10.5V7a2 2 0 0 0-2-2H5A2 2 0 0 0 3 7v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3.5l4 3v-9l-4 3Z"/>
+        </svg>
+        <span>Video(s) on this slide</span>`;
+      details.appendChild(summary);
+      for (const v of videoMap[n]) {
+        const block = document.createElement('div'); block.style.marginTop = '6px';
+        const video = document.createElement('video'); video.controls = true; video.playsInline = true;
+        const source = document.createElement('source'); source.src = videoBase + v.file; if (v.type) source.type = v.type; video.appendChild(source);
+        const fallback = document.createElement('div'); fallback.style.fontSize = '13px'; fallback.style.marginTop = '4px';
+        const a = document.createElement('a'); a.href = videoBase + v.file; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open video in a new tab'; fallback.appendChild(a);
+        block.appendChild(video); block.appendChild(fallback);
+        details.appendChild(block);
+      }
+      vidsWrap.appendChild(details); card.appendChild(vidsWrap);
+    }
+    // Separator must come after the videos (if any) to keep them with the slide
+    const sep = document.createElement('div'); sep.className = 'slide-separator'; card.appendChild(sep);
+    return card;
+  }
+
+  function observeAndRender(pdfjs, pdfDoc) {
+    const pr = pixelRatio();
+    const observer = new IntersectionObserver(async (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const canvas = entry.target; observer.unobserve(canvas);
+        const n = parseInt(canvas.dataset.page, 10);
+        try {
+          const page = await pdfDoc.getPage(n);
+          const unscaled = page.getViewport({ scale: 1 });
+          const containerWidth = canvas.parentElement.clientWidth;
+          const scale = Math.max(0.1, containerWidth / unscaled.width);
+          const viewport = page.getViewport({ scale });
+          canvas.style.width = `${viewport.width}px`;
+          canvas.style.height = `${viewport.height}px`;
+          canvas.width = Math.floor(viewport.width * pr);
+          canvas.height = Math.floor(viewport.height * pr);
+          const ctx = canvas.getContext('2d');
+          const transform = pr !== 1 ? [pr, 0, 0, pr, 0, 0] : null;
+          await page.render({ canvasContext: ctx, viewport, transform }).promise;
+        } catch (err) {
+          const errEl = document.createElement('div'); errEl.className = 'error'; errEl.textContent = 'Failed to render this slide.';
+          canvas.replaceWith(errEl);
+          console.error('Render error for slide', n, err);
+        }
+      }
+    }, { rootMargin: '400px 0px' });
+
+    root.querySelectorAll('canvas.slide-canvas').forEach(c => observer.observe(c));
+
+    // Responsive re-render on resize (debounced)
+    let rid = 0; const debounced = () => { if (rid) cancelAnimationFrame(rid); rid = requestAnimationFrame(() => {
+      root.querySelectorAll('canvas.slide-canvas').forEach(c => {
+        // If already rendered, mark for re-render by re-observing
+        observer.observe(c);
+      });
+    }); };
+    window.addEventListener('resize', debounced);
+  }
+
+  async function importPdfjs() {
+    try { return await import('{{ '/assets/js/pdf.mjs' | relative_url }}'); }
+    catch (_) {
+      try { return await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.mjs'); }
+      catch (e2) { console.error('Failed to import pdf.mjs', e2); return null; }
+    }
+  }
+  function setWorkerSrcLocal(pdfjs) { pdfjs.GlobalWorkerOptions.workerSrc = '{{ '/assets/js/pdf.worker.mjs' | relative_url }}'; }
+  function setWorkerSrcCdn(pdfjs) { pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.worker.mjs'; }
+
+  (async function boot() {
+    statusEl.textContent = 'Loading slides…';
+    const pdfjs = await importPdfjs();
+    if (!pdfjs) { statusEl.className = 'error'; statusEl.textContent = 'Viewer failed to load. Open the PDF directly.'; return; }
+
+    setWorkerSrcLocal(pdfjs);
+    let pdfDoc = null;
+    try {
+      pdfDoc = await pdfjs.getDocument(pdfUrl).promise;
+    } catch (e1) {
+      console.warn('Local worker failed, retrying with CDN worker…', e1);
+      try { setWorkerSrcCdn(pdfjs); pdfDoc = await pdfjs.getDocument(pdfUrl).promise; }
+      catch (e2) { statusEl.className = 'error'; statusEl.textContent = 'Failed to load PDF. Use the Open PDF link.'; console.error(e2); return; }
+    }
+
+    const total = pdfDoc.numPages;
+    const frag = document.createDocumentFragment();
+    for (let i = 1; i <= total; i++) frag.appendChild(buildSlideShell(i));
+    root.appendChild(frag);
+    statusEl.remove();
+
+    observeAndRender(pdfjs, pdfDoc);
+
+    // Set max attribute for top bar jump input now that total is known
+    topSlideInput?.setAttribute('max', String(total));
+
+    // Scroll to anchor if present and set initial part label
+    let initialSlide = 1;
+    const m = (window.location.hash || '').match(/#slide-(\d+)/);
+    if (m) {
+      initialSlide = Math.max(1, parseInt(m[1], 10) || 1);
+      const target = document.getElementById(`slide-${initialSlide}`);
+      if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+    setCurrentPart(initialSlide);
+
+    // Observe milestone parts (incl. slide 1) to sync top label
+    const milestones = [1, 2, 6, 25, 38, 52];
+    const milestoneEls = milestones
+      .map(n => document.getElementById(makeId(n)))
+      .filter(Boolean);
+    const milestoneObserver = new IntersectionObserver((entries) => {
+      let best = null;
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+      }
+      if (best) {
+        const match = best.target.id.match(/slide-(\d+)/);
+        if (match) {
+          const n = parseInt(match[1], 10);
+          setCurrentPart(n);
+          if (roadmapPanel.classList.contains('open')) closeRoadmapPanel();
+        }
+      }
+    }, { threshold: 0.55 });
+    milestoneEls.forEach(el => milestoneObserver.observe(el));
+  })();
+
+  // Roadmap dropdown interactions
+  function closeRoadmapPanel() {
+    roadmapPanel.classList.remove('open');
+    roadmapBtn.setAttribute('aria-expanded', 'false');
+    roadmapBtn.focus();
+  }
+  function openRoadmapPanel() {
+    roadmapPanel.classList.add('open');
+    roadmapBtn.setAttribute('aria-expanded', 'true');
+    const first = roadmapPanel.querySelector('.menu-item');
+    if (first) first.focus();
+  }
+  roadmapBtn?.addEventListener('click', () => {
+    if (roadmapPanel.classList.contains('open')) closeRoadmapPanel();
+    else openRoadmapPanel();
+  });
+  roadmapMenu?.addEventListener('click', (e) => {
+    const item = e.target.closest('.menu-item');
+    if (!item) return;
+    const n = parseInt(item.getAttribute('data-slide'), 10);
+    closeRoadmapPanel();
+    setCurrentPart(n);
+    jumpToSlide(n);
+  });
+  document.addEventListener('click', (e) => {
+    if (!roadmapPanel.classList.contains('open')) return;
+    if (e.target.closest('#roadmapGroup')) return;
+    closeRoadmapPanel();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRoadmapPanel(); });
+
+  // Download dropdown interactions
+  function closeDownloadPanel() {
+    downloadPanel.classList.remove('open');
+    downloadBtn.setAttribute('aria-expanded', 'false');
+    downloadBtn.focus();
+  }
+  function openDownloadPanel() {
+    downloadPanel.classList.add('open');
+    downloadBtn.setAttribute('aria-expanded', 'true');
+    const first = downloadPanel.querySelector('.menu-item');
+    if (first) first.focus();
+  }
+  downloadBtn?.addEventListener('click', () => {
+    if (downloadPanel.classList.contains('open')) closeDownloadPanel();
+    else openDownloadPanel();
+  });
+  downloadPanel?.addEventListener('click', (e) => {
+    const link = e.target.closest('a.menu-item');
+    if (!link) return;
+    closeDownloadPanel();
+  });
+  document.addEventListener('click', (e) => {
+    if (downloadPanel.classList.contains('open') && !e.target.closest('#downloadGroup')) closeDownloadPanel();
+    if (roadmapPanel.classList.contains('open') && !e.target.closest('#roadmapGroup')) closeRoadmapPanel();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (downloadPanel.classList.contains('open')) closeDownloadPanel();
+      if (roadmapPanel.classList.contains('open')) closeRoadmapPanel();
+    }
+  });
+
+  // Focus trap inside panels
+  function trapTab(e, panel) {
+    if (e.key !== 'Tab') return;
+    const focusables = Array.from(panel.querySelectorAll('button, [href], select, [tabindex]:not([tabindex="-1"])')).filter(el => !el.hasAttribute('disabled'));
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && active === first) { e.preventDefault(); last.focus(); }
+  }
+  roadmapPanel?.addEventListener('keydown', (e) => trapTab(e, roadmapPanel));
+  downloadPanel?.addEventListener('keydown', (e) => trapTab(e, downloadPanel));
+
+  // Share button: copy slide link and show feedback
+  root.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button.slide-share');
+    if (!btn) return;
+    const n = parseInt(btn.dataset.page, 10);
+    const url = new URL(window.location.href);
+    url.hash = `slide-${n}`;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url.toString());
+      } else {
+        // Fallback copy
+        const ta = document.createElement('textarea');
+        ta.value = url.toString();
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+      }
+      const original = btn.textContent;
+      btn.textContent = 'Slide link copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+    } catch (err) {
+      console.error('Clipboard failed', err);
+    }
+  });
+
+  // Jump-to-slide handlers (click and Enter key)
+  function normalizedSlide(value) {
+    let n = parseInt(value, 10);
+    if (!Number.isFinite(n) || n < 1) n = 1;
+    return n;
+  }
+  // Per-slide jump controls removed; use top bar jump instead
+
+  // Top bar slide jump interactions
+  topSlideGo?.addEventListener('click', () => {
+    const n = normalizedSlide(topSlideInput?.value || '');
+    jumpToSlide(n);
+  });
+  topSlideInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); const n = normalizedSlide(topSlideInput.value || ''); jumpToSlide(n); }
+  });
+
+  // Keep slide 1 label responsive on resize (switch between short/long)
+  let __labelResizeTid = null;
+  window.addEventListener('resize', () => {
+    if (__labelResizeTid) cancelAnimationFrame(__labelResizeTid);
+    __labelResizeTid = requestAnimationFrame(() => {
+      if (currentPartEl?.title === partLabels[1]) setCurrentPart(1);
+    });
+  });
+</script>
