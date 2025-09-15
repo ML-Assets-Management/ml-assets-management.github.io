@@ -115,8 +115,12 @@ description: "VLDB 2025 Tutorial"
     scroll-margin-top: 90px;
     position: relative;
   }
-  .slide-canvas-wrap { position: relative; display: block; width: 100%; }
-  .slide-separator { border-top: 2px dashed #94a3b8; margin: 12px 0 18px; }
+  .slide-canvas-wrap { position: relative; display: block; width: 100%; margin: 0 auto; }
+  /* On large screens, constrain slide width to 80% */
+  @media (min-width: 1024px) {
+    .slide-canvas-wrap { width: 80%; }
+  }
+  .slide-separator { border-top: 2px dashed #cbd5e1; margin: 12px 0 18px; }
   .slide-card:last-child .slide-separator { display: none; }
   .slide-share {
     position: absolute; right: 10px; top: 10px; z-index: 2;
@@ -183,7 +187,7 @@ description: "VLDB 2025 Tutorial"
 </div>
 
 <script type="module">
-  const pdfUrl = '{{ '/assets/docs/tutorial_vldb25.pdf' | relative_url }}';
+  const pdfUrl = '{{ '/assets/docs/tutorial_vldb25_compressed.pdf' | relative_url }}';
   const videoBase = '{{ '/assets/videos/' | relative_url }}';
 
   // Videos mapped by slide number
