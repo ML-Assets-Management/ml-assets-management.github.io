@@ -141,6 +141,19 @@ description: "VLDB 2025 Tutorial"
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
     background: #eaf6f4; border: 1px solid #c7e8dc; border-radius: 6px; padding: 6px 10px;
   }
+  /* Ensure a consistent dropdown chevron regardless of UA/default styles */
+  .slide-videos summary::-webkit-details-marker { display: none; }
+  .slide-videos summary::marker { content: ''; }
+  /* Left-side chevron, larger size */
+  .slide-videos summary::before {
+    content: '▸';
+    color: #159957;
+    font-size: 20px;
+    line-height: 1;
+    margin-right: 8px;
+    flex: 0 0 auto;
+  }
+  .slide-videos details[open] summary::before { content: '▾'; }
   .slide-videos summary svg { width: 18px; height: 18px; color: #159957; }
   .slide-videos video { width: 100%; border-radius: 6px; background: #000; }
   /* Match video container width to slide width */
